@@ -15,7 +15,7 @@ class Bookworm {
     has $!dmg;
 
     method BUILD (ISBN $isbn) {
-         
+        $isbn.subst(/\-/,'',:g).substr(3);
     }
 }
 
