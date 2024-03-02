@@ -1,8 +1,6 @@
 sub checksum (Str $isbn) {
-    my $sum;
-    for zip $isbn.subst(/(\-|.$)/,'',:g).comb, (1,3) xx 7 -> [$digit, $mult] {
-        $sum += $digit * $mult;
-    }
+    my @mults = 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1;
+    my $sum = [+] zip(@mults, $isbn.subst(/(\-|.$)/,'',:g).comb).map:{[*] $_};
     10-($sum mod 10) ~~ $isbn.substr(*-1)
 }
 
@@ -15,7 +13,7 @@ class Bookworm {
     has $!dmg;
 
     method BUILD (ISBN $isbn) {
-        $isbn.subst(/\-/,'',:g).substr(3);
+        $isbn.subst(/\-/,'',:g).substr(3..*);
     }
 }
 
@@ -27,4 +25,3 @@ multi MAIN (ISBN $book) {
 multi MAIN (ISBN $book1, ISBN $book2) {
     # Start a fight between the two books
 }
-
