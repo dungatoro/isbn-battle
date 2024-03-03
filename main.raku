@@ -1,3 +1,5 @@
+use WWW;
+
 sub checksum (Str $isbn) {
     my @mults = 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1;
     my $sum = [+] zip(@mults, $isbn.subst(/(\-|.$)/,'',:g).comb).map:{[*] $_};
@@ -12,8 +14,12 @@ class Bookworm {
     has Int $!dmg;
     has Int $!alt;
     has Int $!type;
+    has Str $!name;
 
     method BUILD (ISBN :$isbn) {
+        my %response = jget("https://openlibrary.org/api/books?bibkeys=ISBN:$isbn&jscmd=details&format=json");
+        $!name = "%response{"ISBN:$isbn"}{'details'}{'title'} worm";
+
         my @fields = $isbn.subst(/\-/,'',:g).substr(3..*).comb.rotor(3,:partial).map:{Int($_.join)};
         ($!hp, $!dmg, $!alt, $!type) = @fields;
     }
@@ -34,7 +40,7 @@ class Bookworm {
              ~~~~ 
 END
 ;
-        "|HP: $!hp\n|DMG: $!dmg\n|ALT: $!alt\n|TYPE: $!type"
+        "$!name\n----------\n|HP: $!hp\n|DMG: $!dmg\n|ALT: $!alt\n|TYPE: $!type"
     }
 }
 
