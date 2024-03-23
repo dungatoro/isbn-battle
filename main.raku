@@ -40,7 +40,7 @@ class Bookworm {
              ~~~~ 
 END
 ;
-        "$!name\n----------\n|HP: $!hp\n|DMG: $!dmg\n|ALT: $!alt\n|TYPE: $!type"
+        "$!name\n----------\n|HP:   $!hp\n|DMG:  $!dmg\n|ALT:  $!alt\n|TYPE: $!type"
     }
 }
 
